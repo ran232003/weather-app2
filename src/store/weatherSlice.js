@@ -5,7 +5,11 @@ const weatherSlice = createSlice({
   initialState: { autoComplete: [], currentLocationWeather: {} },
   reducers: {
     setAutoComplete(state, action) {
-      state.autoComplete = action.payload;
+      if (Array.isArray(action.payload) === true) {
+        state.autoComplete = action.payload;
+      } else {
+        state.autoComplete.push(action.payload);
+      }
     },
     setCurrentLocationWeather(state, action) {
       state.currentLocationWeather = action.payload;

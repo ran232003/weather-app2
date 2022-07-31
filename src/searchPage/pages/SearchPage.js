@@ -1,11 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import Input from "../../components/Input";
-import { autoComplete, currentLocationApi } from "../../helpers/apiCalls";
+import {
+  autoComplete,
+  currentLocationApi,
+  myLocationApi,
+} from "../../helpers/apiCalls";
 import { getAutoCompleteArray } from "../../helpers/helperFunc";
 import { weatherActions } from "../../store/weatherSlice";
 import WeatherCard from "../components/WeatherCard";
+import WeatherCardList from "../components/WeatherCardList";
 import "./SearchPage.css";
 const SearchPage = (props) => {
   const dispatch = useDispatch();
@@ -13,7 +18,8 @@ const SearchPage = (props) => {
     search: "",
     valid: false,
   });
-  const [currentLocation, setCurrentLocation] = useState("s");
+  const [location, setLocation] = useState(null);
+  const [currentLocation, setCurrentLocation] = useState(null);
   const handleInput = async (inputObject) => {
     setInput(inputObject);
     const result = await autoComplete(inputObject.search);
@@ -24,9 +30,7 @@ const SearchPage = (props) => {
     }
   };
   const handleSubmit = async (fullDetails) => {
-    console.log(fullDetails, "sub");
     const response = await currentLocationApi(fullDetails);
-    console.log(response);
     let tempAndDetailsObject = {
       ...fullDetails,
       icon: response[0].WeatherIcon,
@@ -37,6 +41,35 @@ const SearchPage = (props) => {
     setCurrentLocation(tempAndDetailsObject);
     dispatch(weatherActions.setCurrentLocationWeather(tempAndDetailsObject));
   };
+  const getLocation = () => {
+    if (currentLocation == null) {
+      navigator.geolocation.getCurrentPosition(function (position) {
+        setLocation({
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        });
+      });
+    }
+  };
+  const setMyLocation = async () => {
+    if (location) {
+      const data = await myLocationApi(location);
+      let obj = {
+        fullName: `${data.EnglishName} (${data.Country.LocalizedName})`,
+        key: data.Key,
+        country: data.Country.LocalizedName,
+        city: data.EnglishName,
+      };
+      dispatch(weatherActions.setAutoComplete(obj));
+      handleSubmit(obj);
+    }
+  };
+  useEffect(() => {
+    getLocation();
+  }, []);
+  useEffect(() => {
+    setMyLocation();
+  }, [location]);
 
   return (
     <div>
@@ -50,7 +83,12 @@ const SearchPage = (props) => {
           currentLocation={currentLocation}
         />
       </div>
-      <WeatherCard currentLocation={currentLocation} />
+      {currentLocation === null ? null : (
+        <WeatherCard currentLocation={currentLocation} />
+      )}
+      <div className="weatherList">
+        <WeatherCardList cardWidth="7rem" currentLocation={currentLocation} />
+      </div>
     </div>
   );
 };
