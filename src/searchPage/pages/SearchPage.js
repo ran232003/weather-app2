@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import Input from "../../components/Input";
-import { autoComplete } from "../../helpers/apiCalls";
+import { autoComplete, currentLocationApi } from "../../helpers/apiCalls";
 import { getAutoCompleteArray } from "../../helpers/helperFunc";
 import { weatherActions } from "../../store/weatherSlice";
+import WeatherCard from "../components/WeatherCard";
 import "./SearchPage.css";
 const SearchPage = (props) => {
   const dispatch = useDispatch();
@@ -12,19 +13,31 @@ const SearchPage = (props) => {
     search: "",
     valid: false,
   });
+  const [currentLocation, setCurrentLocation] = useState("s");
   const handleInput = async (inputObject) => {
     setInput(inputObject);
     const result = await autoComplete(inputObject.search);
     if (result === "error") {
     } else {
-      console.log(result);
       const arrayResult = getAutoCompleteArray(result);
-      console.log(arrayResult);
       dispatch(weatherActions.setAutoComplete(arrayResult));
     }
   };
-  const handleSubmit = () => {};
-  console.log(input);
+  const handleSubmit = async (fullDetails) => {
+    console.log(fullDetails, "sub");
+    const response = await currentLocationApi(fullDetails);
+    console.log(response);
+    let tempAndDetailsObject = {
+      ...fullDetails,
+      icon: response[0].WeatherIcon,
+      temp: response[0].Temperature.Metric.Value,
+      text: response[0].WeatherText,
+    };
+
+    setCurrentLocation(tempAndDetailsObject);
+    dispatch(weatherActions.setCurrentLocationWeather(tempAndDetailsObject));
+  };
+
   return (
     <div>
       <div className="searchInput">
@@ -33,9 +46,11 @@ const SearchPage = (props) => {
           helperText="choose a city."
           placeHolder="Enter City"
           handleInput={handleInput}
+          handleSubmit={handleSubmit}
+          currentLocation={currentLocation}
         />
-        <Button onClick={handleSubmit}>Search</Button>
       </div>
+      <WeatherCard currentLocation={currentLocation} />
     </div>
   );
 };

@@ -1,0 +1,25 @@
+[
+  {
+    "LocalObservationDateTime": "2022-07-28T09:37:00+03:00",
+    "EpochTime": 1658990220,
+    "WeatherText": "Cloudy",
+    "WeatherIcon": 7,
+    "HasPrecipitation": false,
+    "PrecipitationType": null,
+    "IsDayTime": true,
+    "Temperature": {
+      "Metric": {
+        "Value": 16.7,
+        "Unit": "C",
+        "UnitType": 17
+      },
+      "Imperial": {
+        "Value": 62,
+        "Unit": "F",
+        "UnitType": 18
+      }
+    },
+    "MobileLink": "http://www.accuweather.com/en/er/asmara/129237/current-weather/129237?lang=en-us",
+    "Link": "http://www.accuweather.com/en/er/asmara/129237/current-weather/129237?lang=en-us"
+  }
+]

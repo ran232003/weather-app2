@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { Fragment, useState } from "react";
 import { Form } from "react-bootstrap";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const Input = (props) => {
   const { lable, inputName, placeHolder, helperText } = props;
@@ -10,12 +10,16 @@ const Input = (props) => {
     [inputName]: "",
     valid: false,
   });
+
   const weatherOptions = useSelector((state) => {
     return state.weather;
   });
   const [optionsArray, setOptionsArray] = useState([]);
   const top100Films = [];
-  const handleChange = (event) => {
+  const weatherArray = useSelector((state) => {
+    return state.weather.autoComplete;
+  });
+  const handleChange = (event, value) => {
     console.log(event.target.value);
     let val = event.target.value;
     let obj = {};
@@ -28,6 +32,10 @@ const Input = (props) => {
     }
     props.handleInput(obj);
   };
+  const finalValue = (event, value) => {
+    let obj = { valid: true, [inputName]: value.city };
+    props.handleSubmit(value);
+  };
   return (
     <Form>
       <Form.Group className="mb-3" controlId="formBasicEmail">
@@ -35,7 +43,10 @@ const Input = (props) => {
         <Autocomplete
           disablePortal
           id="combo-box-demo"
-          options={top100Films}
+          options={weatherArray}
+          getOptionSelected={(option) => props.handleInput(option)}
+          getOptionLabel={(option) => option.fullName}
+          onChange={finalValue}
           renderInput={(params) => (
             <TextField
               {...params}

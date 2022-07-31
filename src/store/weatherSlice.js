@@ -2,10 +2,13 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const weatherSlice = createSlice({
   name: "weather",
-  initialState: { autoComplete: [] },
+  initialState: { autoComplete: [], currentLocationWeather: {} },
   reducers: {
     setAutoComplete(state, action) {
       state.autoComplete = action.payload;
+    },
+    setCurrentLocationWeather(state, action) {
+      state.currentLocationWeather = action.payload;
     },
   },
 });
