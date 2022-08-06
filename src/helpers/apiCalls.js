@@ -37,12 +37,12 @@ export const myLocationApi = async (location) => {
 export const fiveDaysApi = async (location) => {
   const { key } = location;
   const response = await fetch(
-    `http://dataservice.accuweather.com/forecasts/v1/daily/5day/${key}?apikey=${APIKEY}`
+    `http://dataservice.accuweather.com/forecasts/v1/daily/5day/${key}?apikey=${APIKEY}&metric=true`
   );
-  console.log(response);
+
   if (response.status == 200) {
     const data = await response.json();
-    console.log(data, "five");
+
     return data;
   } else {
   }

@@ -1,0 +1,6 @@
+.weatherCardList {
+  display: flex;
+}
+.tests {
+  cursor: pointer;
+}

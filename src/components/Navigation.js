@@ -15,11 +15,8 @@ const Navigation = (props) => {
             <Nav className="me-auto"></Nav>
 
             <Nav>
-              <Nav.Link as={Link} to="/sign-up">
-                SignUp
-              </Nav.Link>
-              <Nav.Link eventKey={2} as={Link} to="/login">
-                Login
+              <Nav.Link as={Link} to="/favorites">
+                Favorites
               </Nav.Link>
             </Nav>
           </Navbar.Collapse>

@@ -33,10 +33,8 @@ const Input = (props) => {
     props.handleInput(obj);
   };
   const finalValue = (event, value) => {
-    console.log(value, "in");
     props.handleSubmit(value);
   };
-  console.log(weatherArray, "weatherArray");
   return (
     <Form>
       <Form.Group className="mb-3" controlId="formBasicEmail">

@@ -1,3 +1,20 @@
 .weatherCard {
   margin-left: 10px;
 }
+
+@media screen and (max-width: 500px) {
+  .weatherCard {
+    margin: auto;
+    width: 50%;
+  }
+}
+@media screen and (max-width: 1030px) {
+  .weatherCard0 {
+    margin-left: 510px;
+  }
+}
+@media screen and (max-width: 440px) {
+  .weatherCard0 {
+    margin-left: 610px;
+  }
+}

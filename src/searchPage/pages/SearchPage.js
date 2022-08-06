@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Button, Form } from "react-bootstrap";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Input from "../../components/Input";
 import {
   autoComplete,
@@ -9,17 +9,22 @@ import {
 } from "../../helpers/apiCalls";
 import { getAutoCompleteArray } from "../../helpers/helperFunc";
 import { weatherActions } from "../../store/weatherSlice";
+import Icon from "../components/Icon";
 import WeatherCard from "../components/WeatherCard";
 import WeatherCardList from "../components/WeatherCardList";
 import "./SearchPage.css";
 const SearchPage = (props) => {
+  const favLocation = useSelector((state) => {
+    return state.weather.currentLocationWeather;
+  });
   const dispatch = useDispatch();
   const [input, setInput] = useState({
     search: "",
     valid: false,
   });
   const [location, setLocation] = useState(null);
-  const [currentLocation, setCurrentLocation] = useState(null);
+
+  const [currentLocation, setCurrentLocation] = useState(favLocation);
   const handleInput = async (inputObject) => {
     setInput(inputObject);
     const result = await autoComplete(inputObject.search);
@@ -33,6 +38,7 @@ const SearchPage = (props) => {
     const response = await currentLocationApi(fullDetails);
     let tempAndDetailsObject = {
       ...fullDetails,
+      fave: false,
       icon: response[0].WeatherIcon,
       temp: response[0].Temperature.Metric.Value,
       text: response[0].WeatherText,
@@ -64,15 +70,20 @@ const SearchPage = (props) => {
       handleSubmit(obj);
     }
   };
+  const iconClick = () => {};
   useEffect(() => {
-    getLocation();
+    if (!favLocation) {
+      getLocation();
+    }
   }, []);
   useEffect(() => {
-    setMyLocation();
+    if (!favLocation) {
+      setMyLocation();
+    }
   }, [location]);
 
   return (
-    <div>
+    <div className="test">
       <div className="searchInput">
         <Input
           inputName="search"
@@ -83,11 +94,14 @@ const SearchPage = (props) => {
           currentLocation={currentLocation}
         />
       </div>
+      <Icon iconClick={iconClick} currentLocation={currentLocation} />
       {currentLocation === null ? null : (
         <WeatherCard currentLocation={currentLocation} />
       )}
-      <div className="weatherList">
-        <WeatherCardList cardWidth="7rem" currentLocation={currentLocation} />
+      <div>
+        {currentLocation === null ? null : (
+          <WeatherCardList cardWidth="7rem" currentLocation={currentLocation} />
+        )}
       </div>
     </div>
   );

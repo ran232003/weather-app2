@@ -4,6 +4,7 @@ import Navigation from "./components/Navigation";
 import { Route, Routes } from "react-router-dom";
 import LandingPage from "./landingPage/pages/LandingPage";
 import SearchPage from "./searchPage/pages/SearchPage";
+import FavoritePage from "./favorites/pages/FavoritePage";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />}></Route>
         <Route exact path="/search" element={<SearchPage />}></Route>
+        <Route exact path="/favorites" element={<FavoritePage />}></Route>
       </Routes>
     </div>
   );

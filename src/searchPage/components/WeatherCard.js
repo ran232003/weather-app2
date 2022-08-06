@@ -1,10 +1,13 @@
 import React from "react";
 import { Card, ListGroup } from "react-bootstrap";
+import Headline from "../../components/HeadeLine";
 import "./WeatherCard.css";
 const WeatherCard = (props) => {
-  const { currentLocation } = props;
+  const { currentLocation, index } = props;
+  let addingClass = typeof index === "undefined" ? "" : index;
   return (
-    <div className="weatherCard">
+    <div className={"weatherCard" + addingClass}>
+      <Headline lable={currentLocation.date} />
       <Card style={{ width: "11rem" }}>
         <Card.Img variant="top" src="../weatherIcons/1.svg" />
         <Card.Body>
